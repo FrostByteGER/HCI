@@ -20,25 +20,53 @@ public class Game {
 		
 		Player temp;
 		
-		for(int i = 0 ; i < Utility.GROUP_AMOUNT ; i++){
+		for(int i = 0 ; i < Settings.GROUP_AMOUNT ; i++){
 			fractions.add(new Fraction(i));
-			for(int j = 0 ; j < Utility.PLAYER_PER_GROUP ; j++){
-				temp = new Player((i*Utility.GROUP_AMOUNT)+j, fractions.get(i));
+			for(int j = 0 ; j < Settings.PLAYER_PER_GROUP ; j++){
+				temp = new Player((i*Settings.GROUP_AMOUNT)+j, fractions.get(i));
 				players.add(temp);
-				temp.setXY(r.nextInt(Utility.MAP_SIZE), r.nextInt(Utility.MAP_SIZE));
+				temp.setXY(r.nextInt(Settings.MAP_SIZE), r.nextInt(Settings.MAP_SIZE));
 			}
 		}
 		
 		runIt();
 	}
 	
+	public void runOnce(){
+		for(Player p : players){
+			
+			if(!p.isBot()){
+				p.earnMoney();
+				continue;
+			}
+			
+			p.buyUnitsUntil();//TODO  KI
+			
+			p.addAllUnitsToField(map.getField(p.getX(), p.getY()));
+			
+			playerMove(p);
+			
+			p.earnMoney();
+		}
+		
+		for(int fightTicks = 0 ; fightTicks < Settings.FIGHTS_PER_TICK ; fightTicks++){
+			map.fightTick();
+		}	
+	}
+	
 	private void runIt(){
 		
-		for(int tick = 0 ; tick < Utility.TICK_AMOUNT ; tick++){
+		for(int tick = 0 ; tick < Settings.TICK_AMOUNT ; tick++){
 			
-			System.out.println("GameTick: "+tick);
+			//System.out.println("GameTick: "+tick);
 			
 			for(Player p : players){
+				
+				if(!p.isBot()){
+					p.earnMoney();
+					continue;
+				}
+				
 				p.buyUnitsUntil();//TODO  KI
 				
 				p.addAllUnitsToField(map.getField(p.getX(), p.getY()));
@@ -48,7 +76,7 @@ public class Game {
 				p.earnMoney();
 			}
 			
-			for(int fightTicks = 0 ; fightTicks < Utility.FIGHTS_PER_TICK ; fightTicks++){
+			for(int fightTicks = 0 ; fightTicks < Settings.FIGHTS_PER_TICK ; fightTicks++){
 				map.fightTick();
 			}		
 		}
@@ -88,13 +116,41 @@ public class Game {
 		System.out.println();
 	}
 	
+	/**
+	 * @return the map
+	 */
+	public Map getMap() {
+		return map;
+	}
+
+	/**
+	 * @param map the map to set
+	 */
+	public void setMap(Map map) {
+		this.map = map;
+	}
+
+	/**
+	 * @return the players
+	 */
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+
+	/**
+	 * @param players the players to set
+	 */
+	public void setPlayers(ArrayList<Player> players) {
+		this.players = players;
+	}
+
 	public static void main(String[] args) {
 		
 		System.out.println("start");
 		
 		Game g = new Game();
 		
-		if(Utility.SHOW_EXTENDET){
+		if(Settings.SHOW_EXTENDET){
 			System.out.println("----------Extendet----------");
 			g.showGameExt();
 		}

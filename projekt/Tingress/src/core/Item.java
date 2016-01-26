@@ -2,7 +2,7 @@ package core;
 
 public class Item {
 	
-	private int uses = Utility.ITEM_USES;
+	private int uses = Settings.ITEM_USES;
 	
 	public Item() {
 		

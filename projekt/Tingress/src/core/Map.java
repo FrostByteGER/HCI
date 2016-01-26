@@ -9,17 +9,17 @@ public class Map {
 		
 		fiels = new ArrayList<ArrayList<GameField>>();
 		
-		for(int i =  0 ; i < Utility.MAP_SIZE ; i++){
+		for(int i =  0 ; i < Settings.MAP_SIZE ; i++){
 			fiels.add(new ArrayList<GameField>());
-			for(int j = 0 ; j < Utility.MAP_SIZE ; j++){
+			for(int j = 0 ; j < Settings.MAP_SIZE ; j++){
 				fiels.get(i).add(new GameField(i, j));
 			}
 		}
 	}
 	
 	public void fightTick(){
-		for(int i = 0 ; i < Utility.MAP_SIZE ; i++){
-			for(int j = 0 ; j < Utility.MAP_SIZE ; j++){
+		for(int i = 0 ; i < Settings.MAP_SIZE ; i++){
+			for(int j = 0 ; j < Settings.MAP_SIZE ; j++){
 				fiels.get(i).get(j).fightTick();
 			}
 		}

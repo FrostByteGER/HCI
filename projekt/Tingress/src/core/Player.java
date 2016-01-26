@@ -1,36 +1,46 @@
 package core;
 
+import java.util.ArrayList;
 
 public class Player {
 	
+	//CORE
 	private Integer id = -1;
 	
+	private boolean isBot = true;
+
 	private int x = -1;
 	private int y = -1;
 	
 	private int money = 0;
-	private int moneyPerTime = Utility.MONEY_PER_TICK;
-	private int maxMoney = Utility.MONEY_CAP;
-	private int plusLevel = Utility.MORE_MONEY_PER_LEVEL;
+	private int moneyPerTime = Settings.MONEY_PER_TICK;
+	private int maxMoney = Settings.MONEY_CAP;
+	private int plusLevel = Settings.MORE_MONEY_PER_LEVEL;
 	
 	private int ep = 0;
 	private int level = 0;
-	private int levelup = Utility.EP_START;
-	private int levelNext = Utility.EP_FOR_NEXT_LEVEL_MUL;
+	private int levelup = Settings.EP_START;
+	private int levelNext = Settings.EP_FOR_NEXT_LEVEL_MUL;
 	private Fraction fraction;
 	private Clan clan;
+	private ArrayList<BattelReport> reports;
 	
 	private UnitGroup units;
-	private int unitCost = Utility.UNIT_COST;
-	private int unitCap = Utility.UNIT_CAP_PLAYER;
-	private int unitLevel = Utility.MORE_UNITS_PER_LEVEL;
+	private int unitCost = Settings.UNIT_COST;
+	private int unitCap = Settings.UNIT_CAP_PLAYER;
+	private int unitLevel = Settings.MORE_UNITS_PER_LEVEL;
+	
+	//GUI
+	
+	private int xPosition = 0;
+	private int yPosition = 0;
 	
 	public Player(int id, Fraction fraction) {
 		this.id = id;
 		this.fraction = fraction;
 		this.clan = null;
 		this.units = new UnitGroup(this);
-		
+		this.reports = new ArrayList<BattelReport>();
 		
 	}
 	
@@ -89,13 +99,13 @@ public class Player {
 	
 	public void buyUnitsUntil(){
 		
-		if(money >= Utility.UNIT_COST*3){
+		if(money >= Settings.UNIT_COST*3){
 			int temp = 0;
 						
 			temp = (money/unitCost)/3;
 			
-			if(units.getUnitAmount() + temp*3 > Utility.UNIT_CAP_PLAYER){
-				temp = (Utility.UNIT_CAP_FIELD-units.getUnitAmount())/3-1;
+			if(units.getUnitAmount() + temp*3 > Settings.UNIT_CAP_PLAYER){
+				temp = (Settings.UNIT_CAP_FIELD-units.getUnitAmount())/3-1;
 			}
 			
 			buyArcher(temp);
@@ -116,15 +126,15 @@ public class Player {
 		int horsemanAmount = units.getHorseman().size();
 		int lancerAmount = units.getLancer().size();
 		
-		double temp = Utility.UNIT_CAP_FIELD;
+		double temp = Settings.UNIT_CAP_FIELD;
 				
 		// rechnet die Anzahl an einheiten aus die Plaziert werden können für
 		// jeden Slot Archer ,Horseman und Lancer ( /3)
 		if(f.getOwnerFraction() != null && getFraction() != null){
 			if(f.getOwnerFraction().equals(getFraction())){
-				temp = ((1D-(f.getUnitAmountDef()/Utility.UNIT_CAP_FIELD))*Utility.UNIT_CAP_FIELD)/3;
+				temp = ((1D-(f.getUnitAmountDef()/Settings.UNIT_CAP_FIELD))*Settings.UNIT_CAP_FIELD)/3;
 			}else{
-				temp = ((1D-(f.getUntiAmountAtk()/Utility.UNIT_CAP_FIELD))*Utility.UNIT_CAP_FIELD)/3;
+				temp = ((1D-(f.getUntiAmountAtk()/Settings.UNIT_CAP_FIELD))*Settings.UNIT_CAP_FIELD)/3;
 			}
 		}
 			
@@ -146,8 +156,8 @@ public class Player {
 	}
 	
 	public void earnMoney(){
-		if((money+moneyPerTime)+((fraction.getOwning()/(Utility.MAP_SIZE*Utility.MAP_SIZE))*Utility.MONEY_PER_FIELD) < Utility.MONEY_CAP){
-			this.money += moneyPerTime+((fraction.getOwning()/(Utility.MAP_SIZE*Utility.MAP_SIZE))*Utility.MONEY_PER_FIELD);
+		if((money+moneyPerTime)+((fraction.getOwning()/(Settings.MAP_SIZE*Settings.MAP_SIZE))*Settings.MONEY_PER_FIELD) < Settings.MONEY_CAP){
+			this.money += moneyPerTime+((fraction.getOwning()/(Settings.MAP_SIZE*Settings.MAP_SIZE))*Settings.MONEY_PER_FIELD);
 		}
 		
 	}
@@ -185,8 +195,8 @@ public class Player {
 	}
 	
 	public void earnMoney(double owning){
-		if((money+moneyPerTime)+(owning*Utility.MONEY_PER_FIELD) < maxMoney){
-			this.money += moneyPerTime+(owning*Utility.MONEY_PER_FIELD);
+		if((money+moneyPerTime)+(owning*Settings.MONEY_PER_FIELD) < maxMoney){
+			this.money += moneyPerTime+(owning*Settings.MONEY_PER_FIELD);
 		}
 		
 	}
@@ -281,7 +291,7 @@ public class Player {
 	 * @param x the x to set
 	 */
 	public void setX(int x) {
-		if(Utility.MAP_SIZE > x && 0 <= x ){
+		if(Settings.MAP_SIZE > x && 0 <= x ){
 			this.x = x;
 		}		
 	}
@@ -298,7 +308,7 @@ public class Player {
 	 */
 	public void setY(int y) {
 		
-		if(Utility.MAP_SIZE > y && 0 <= y ){
+		if(Settings.MAP_SIZE > y && 0 <= y ){
 			this.y = y;
 		}
 	}
@@ -308,6 +318,60 @@ public class Player {
 		this.y = y;
 	}
 	
-	
+	/**
+	 * @return the isBot
+	 */
+	public boolean isBot() {
+		return isBot;
+	}
+
+	/**
+	 * @param isBot the isBot to set
+	 */
+	public void setBot(boolean isBot) {
+		this.isBot = isBot;
+	}
+
+	/**
+	 * @return the xPosition
+	 */
+	public int getxPosition() {
+		return xPosition;
+	}
+
+	/**
+	 * @param xPosition the xPosition to set
+	 */
+	public void setxPosition(int xPosition) {
+		this.xPosition = xPosition;
+	}
+
+	/**
+	 * @return the yPosition
+	 */
+	public int getyPosition() {
+		return yPosition;
+	}
+
+	/**
+	 * @param yPosition the yPosition to set
+	 */
+	public void setyPosition(int yPosition) {
+		this.yPosition = yPosition;
+	}
+
+	/**
+	 * @return the reports
+	 */
+	public ArrayList<BattelReport> getReports() {
+		return reports;
+	}
+
+	/**
+	 * @param reports the reports to set
+	 */
+	public void setReports(ArrayList<BattelReport> reports) {
+		this.reports = reports;
+	}
 }
 

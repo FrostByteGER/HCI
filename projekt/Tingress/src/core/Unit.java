@@ -6,16 +6,17 @@ public class Unit {
 	
 	private Random r = new Random();
 	
-	private int hp = 100;
-	private int maxDamage = 15;
-	private int minDamage = 10;
+	private int hp = Settings.UNIT_HP;
+	private int maxDamage = Settings.UNIT_MAX_DAMAGE;
+	private int minDamage = Settings.UNIT_MIN_DAMAGE;
 	
 	public Unit() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void fight(Unit enemy){
+	public boolean fight(Unit enemy){
 		enemy.setHp(enemy.getHp()-(r.nextInt(maxDamage-minDamage+1)+minDamage));
+		return enemy.getHp() <= 0;
 	}
 	
 	public void dieHard(ArrayList<Unit> group){

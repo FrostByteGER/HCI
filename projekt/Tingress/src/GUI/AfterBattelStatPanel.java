@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
 
-public class BattelStatPanel extends JPanel {
+public class AfterBattelStatPanel extends JPanel {
 	private JPanel panel;
 	private JButton backButton;
 	private JLabel battelStateTitleLabel;
@@ -57,7 +57,7 @@ public class BattelStatPanel extends JPanel {
 	
 	private GameField activeField;
 	
-	public BattelStatPanel(MainPanel mainPanel) {
+	public AfterBattelStatPanel(MainPanel mainPanel) {
 		
 		this.mainPanel = mainPanel;
 		this.activeField = mainPanel.getGame().getMap().getField(mainPanel.getActivePlayer().getX(), mainPanel.getActivePlayer().getY());
@@ -73,12 +73,12 @@ public class BattelStatPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BattelStatPanel.this.mainPanel.changeToMapPanel();
+				AfterBattelStatPanel.this.mainPanel.changeToMapPanel();
 			}
 		});
 		panel.add(backButton, BorderLayout.WEST);
 		
-		battelStateTitleLabel = new JLabel("Battle State");
+		battelStateTitleLabel = new JLabel("WIN");
 		battelStateTitleLabel.setFont(Settings.MID_FONT);
 		battelStateTitleLabel.setVerticalAlignment(SwingConstants.CENTER);
 		battelStateTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -88,10 +88,10 @@ public class BattelStatPanel extends JPanel {
 		add(unitTypPanel);
 		unitTypPanel.setLayout(new GridLayout(0, 5, 0, 0));
 		
-		placeHolderLabel = new JLabel("");
+		placeHolderLabel = new JLabel("/");
 		unitTypPanel.add(placeHolderLabel);
 		
-		placeHolder2Label = new JLabel("");
+		placeHolder2Label = new JLabel("/");
 		unitTypPanel.add(placeHolder2Label);
 		
 		archerLabel = new JLabel("");
@@ -113,106 +113,103 @@ public class BattelStatPanel extends JPanel {
 		unitTypPanel.add(horsemanLabel);
 		
 		defLostPanel = new JPanel();
-		//defLostPanel.setBackground(Settings.LIGHT_BLUE);
 		add(defLostPanel);
 		defLostPanel.setLayout(new GridLayout(0, 5, 0, 0));
 		
-		defNameLabel = new JLabel("");
-		defNameLabel.setIcon(Settings.SHIELD);
+		defNameLabel = new JLabel("Def");
 		defLostPanel.add(defNameLabel);
 		
 		defLostLabel = new JLabel("Lost");
 		defLostPanel.add(defLostLabel);
 		
-		defLostArcherAmountLabel = new JLabel("0");
-		defLostArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		defLostArcherAmountLabel = new JLabel("10");
 		defLostArcherAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		defLostArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		defLostPanel.add(defLostArcherAmountLabel);
 		
-		defLostLancerAmountLabel = new JLabel("0");
-		defLostLancerAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		defLostLancerAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		defLostLancerAmountLabel = new JLabel("15");
+		defLostArcherAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		defLostArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		defLostPanel.add(defLostLancerAmountLabel);
 		
-		defLostHorsemanAmountLabel = new JLabel("0");
-		defLostHorsemanAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		defLostHorsemanAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		defLostHorsemanAmountLabel = new JLabel("12");
+		defLostArcherAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		defLostArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		defLostPanel.add(defLostHorsemanAmountLabel);
 		
 		defRemainPanel = new JPanel();
 		add(defRemainPanel);
 		defRemainPanel.setLayout(new GridLayout(0, 5, 0, 0));
 		
-		defPlaceholderLabel = new JLabel("");
+		defPlaceholderLabel = new JLabel("/");
 		defRemainPanel.add(defPlaceholderLabel);
 		
 		defRemainLabel = new JLabel("Remain");
 		defRemainPanel.add(defRemainLabel);
 		
-		defRemainArcherAmountLabel = new JLabel("0");
-		defRemainArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		defRemainArcherAmountLabel = new JLabel("16");
 		defRemainArcherAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		defRemainArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		defRemainPanel.add(defRemainArcherAmountLabel);
 		
-		defRemainLancerAmountLabel = new JLabel("0");
-		defRemainLancerAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		defRemainLancerAmountLabel = new JLabel("13");
 		defRemainLancerAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		defRemainLancerAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		defRemainPanel.add(defRemainLancerAmountLabel);
 		
-		defRemainHorsemanAmountLabel = new JLabel("0");
-		defRemainHorsemanAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		defRemainHorsemanAmountLabel = new JLabel("9");
 		defRemainHorsemanAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		defRemainHorsemanAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		defRemainPanel.add(defRemainHorsemanAmountLabel);
 		
 		atkLostPanel = new JPanel();
 		add(atkLostPanel);
 		atkLostPanel.setLayout(new GridLayout(1, 5, 0, 0));
 		
-		atkNameLabel = new JLabel("");
-		atkNameLabel.setIcon(Settings.SWORD);
+		atkNameLabel = new JLabel("Atk");
 		atkLostPanel.add(atkNameLabel);
 		
 		atkLostLabel = new JLabel("Lost");
 		atkLostPanel.add(atkLostLabel);
 		
-		atkLostArcherAmountLabel = new JLabel("0");
-		atkLostArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		atkLostArcherAmountLabel = new JLabel("20");
 		atkLostArcherAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		atkLostArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkLostPanel.add(atkLostArcherAmountLabel);
 		
-		atkLostLancerAmountLabel = new JLabel("0");
-		atkLostLancerAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		atkLostLancerAmountLabel = new JLabel("20");
 		atkLostLancerAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		atkLostLancerAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkLostPanel.add(atkLostLancerAmountLabel);
 		
-		atkLostHorsemanAmountLabel = new JLabel("0");
-		atkLostHorsemanAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		atkLostHorsemanAmountLabel = new JLabel("20");
 		atkLostHorsemanAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		atkLostHorsemanAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkLostPanel.add(atkLostHorsemanAmountLabel);
 		
 		atkRemainPanel = new JPanel();
 		add(atkRemainPanel);
 		atkRemainPanel.setLayout(new GridLayout(0, 5, 0, 0));
 		
-		atkPlaceholderLabel = new JLabel("");
+		atkPlaceholderLabel = new JLabel("/");
 		atkRemainPanel.add(atkPlaceholderLabel);
 		
 		atkRemainLabel = new JLabel("Remain");
 		atkRemainPanel.add(atkRemainLabel);
 		
 		atkRemainArcherAmountLabel = new JLabel("0");
-		atkRemainArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkRemainArcherAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		atkRemainArcherAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkRemainPanel.add(atkRemainArcherAmountLabel);
 		
 		atkRemainLancerAmountLabel = new JLabel("0");
-		atkRemainLancerAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkRemainLancerAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		atkRemainLancerAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkRemainPanel.add(atkRemainLancerAmountLabel);
 		
 		atkRemainHorsemanAmountLabel = new JLabel("0");
-		atkRemainHorsemanAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkRemainHorsemanAmountLabel.setVerticalAlignment(SwingConstants.CENTER);
+		atkRemainHorsemanAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		atkRemainPanel.add(atkRemainHorsemanAmountLabel);
 		
 		datePanel = new JPanel();
@@ -222,25 +219,12 @@ public class BattelStatPanel extends JPanel {
 		dateNameLable = new JLabel("Date");
 		datePanel.add(dateNameLable);
 		
-		dateLable = new JLabel("26.01.2016");
+		dateLable = new JLabel("TT.MM.JJJJ");
 		datePanel.add(dateLable);
 		
 		reinforceButton = new JButton("Reinforce");
-		reinforceButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				BattelStatPanel.this.mainPanel.changeToBattelPreparePanel();
-				
-			}
-		});
-		
+		reinforceButton.setEnabled(false);
 		add(reinforceButton);
-		
-	}
-	
-	public void refreshLables(){
-		this.activeField = mainPanel.getGame().getMap().getField(mainPanel.getActivePlayer().getX(), mainPanel.getActivePlayer().getY());
 		
 		if(this.activeField.getOwnerFraction().getNumber() == 1){
 			defLostPanel.setBackground(Settings.LIGHT_RED);
@@ -255,6 +239,12 @@ public class BattelStatPanel extends JPanel {
 			atkLostPanel.setBackground(Settings.LIGHT_RED);
 			atkRemainPanel.setBackground(Settings.LIGHT_RED);
 		}
+		
+	}
+	
+	public void refreshLables(){
+		this.activeField = mainPanel.getGame().getMap().getField(mainPanel.getActivePlayer().getX(), mainPanel.getActivePlayer().getY());
+		
 		
 		defRemainArcherAmountLabel.setText(activeField.getArcherDefAmount()+"");
 		defRemainLancerAmountLabel.setText(activeField.getLancerDefAmount()+"");

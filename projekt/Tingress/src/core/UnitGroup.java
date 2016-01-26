@@ -13,6 +13,10 @@ public class UnitGroup {
 	private Unit activeHorseman;
 	private Unit activeLancer;
 	
+	private int archerDeathCounter = 0;
+	private int lancerDeathCounter = 0;
+	private int horsemanDeathcounter = 0;
+	
 	private Player owner;
 	
 	private int unitAmount = 0;
@@ -37,24 +41,25 @@ public class UnitGroup {
 			lancer.add(new Lancer());
 		}
 		nextLancer();
+		
+		refreshUnitAmount();
 	}
 	
-	public int fightTick(UnitGroup enemys){
+	public int fightTick(UnitGroup enemys ,UnitGroup own){
 		
 		int end = 0;
 		
 		if(activeArcher != null){
 			if(activeArcher.getHp() <= 0){
-				enemys.getOwner().getMoreEx(Utility.EP_PER_KILL);
+				enemys.getOwner().getMoreEx(Settings.EP_PER_KILL);
 				end++;
 				nextArcher();
 			}
 		}
 		
-		
 		if(activeHorseman != null){
 			if(activeHorseman.getHp() <= 0){
-				enemys.getOwner().getMoreEx(Utility.EP_PER_KILL);
+				enemys.getOwner().getMoreEx(Settings.EP_PER_KILL);
 				end++;
 				nextHorseman();
 			}
@@ -62,7 +67,7 @@ public class UnitGroup {
 		
 		if(activeLancer != null){
 			if(activeLancer.getHp() <= 0){
-				enemys.getOwner().getMoreEx(Utility.EP_PER_KILL);
+				enemys.getOwner().getMoreEx(Settings.EP_PER_KILL);
 				end++;
 				nextLancer();
 			}
@@ -70,41 +75,59 @@ public class UnitGroup {
 		
 		if(activeArcher != null){
 			if(enemys.getActiveArcher() != null){
-				activeArcher.fight(enemys.getActiveArcher());
+				if(activeArcher.fight(enemys.getActiveArcher())){
+					enemys.increaseArcherDeathCounter();
+				}			
 			}else if(enemys.getActiveLancer() != null){
-				activeArcher.fight(enemys.getActiveLancer());				
+				if (activeArcher.fight(enemys.getActiveLancer())){
+					enemys.increaseLancerDeathCounter();
+				}			
 			}else if(enemys.getActiveHorseman() != null){
-				activeArcher.fight(enemys.getActiveHorseman());
+				if(activeArcher.fight(enemys.getActiveHorseman())){
+					enemys.increaseHorsemanDeathcounter();
+				}
 			}			
 		}
 		
 		if(activeHorseman != null){
 			if(enemys.getActiveHorseman() != null){
-				activeHorseman.fight(enemys.getActiveHorseman());
+				if(activeHorseman.fight(enemys.getActiveHorseman())){
+					enemys.increaseHorsemanDeathcounter();
+				}
 			}else if(enemys.getActiveArcher() != null){
-				activeHorseman.fight(enemys.getActiveArcher());
+				if(activeHorseman.fight(enemys.getActiveArcher())){
+					enemys.increaseArcherDeathCounter();
+				}
 			}else if(enemys.getActiveLancer() != null){
-				activeHorseman.fight(enemys.getActiveLancer());
+				if(activeHorseman.fight(enemys.getActiveLancer())){
+					enemys.increaseLancerDeathCounter();
+				}
 			}
 		}
 		
 		if(activeLancer != null){
 			if(enemys.getActiveLancer() != null){
-				activeLancer.fight(enemys.getActiveLancer());
+				if(activeLancer.fight(enemys.getActiveLancer())){
+					enemys.increaseLancerDeathCounter();
+				}
 			}else if(enemys.getActiveHorseman() != null){
-				activeLancer.fight(enemys.getActiveHorseman());
+				if(activeLancer.fight(enemys.getActiveHorseman())){
+					enemys.increaseHorsemanDeathcounter();
+				}
 			}else if(enemys.getActiveArcher() != null){
-				activeLancer.fight(enemys.getActiveArcher());
+				if(activeLancer.fight(enemys.getActiveArcher())){
+					enemys.increaseArcherDeathCounter();
+				}
 			}
 		}
-		unitAmount = archer.size()+horseman.size()+lancer.size();
+		refreshUnitAmount();
 		
 		for(int i = 0 ; i < items.size() ; i++){
 			items.get(i).use(this);;
 		}
 		
 		if(activeArcher == null && activeHorseman == null && activeLancer == null){
-			//TODO
+			
 		}
 		
 		return end;
@@ -156,26 +179,27 @@ public class UnitGroup {
 	}
 	
 	public boolean addArcher(int amount){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+amount){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+amount){
 			for(int i = 0 ; i < amount ; i++){
 				archer.add(new Archer());
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeArcher == null){
 				nextArcher();
 			}
 			return true;
 		}
-		
 		return false;
 	}
 	
 	public boolean addArcher(ArrayList<Unit> us){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+us.size()){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+us.size()){
 			for(Unit u : us){
 				archer.add(u);
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeArcher == null){
 				nextArcher();
 			}
@@ -185,11 +209,12 @@ public class UnitGroup {
 	}
 	
 	public boolean addArcherFrom(ArrayList<Unit> us ,int amount){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+amount && us.size() >= amount){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+amount && us.size() >= amount){
 			for(int i = 0 ; i < amount ; i++){
 				archer.add(us.remove(0));
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeArcher == null){
 				nextArcher();
 			}
@@ -199,13 +224,14 @@ public class UnitGroup {
 	}
 	
 	public boolean addHorseman(int amount){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+amount){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+amount){
 			for(int i = 0 ; i < amount ; i++){
 				horseman.add(new Horseman());
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeHorseman == null){
-				nextArcher();
+				nextHorseman();
 			}
 			return true;
 		}
@@ -214,13 +240,14 @@ public class UnitGroup {
 	}
 	
 	public boolean addHorseman(ArrayList<Unit> us){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+us.size()){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+us.size()){
 			for(Unit u : us){
 				horseman.add(u);
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeHorseman == null){
-				nextArcher();
+				nextHorseman();
 			}
 			return true;
 		}
@@ -228,13 +255,14 @@ public class UnitGroup {
 	}
 	
 	public boolean addHorsemanFrom(ArrayList<Unit> us ,int amount){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+amount && us.size() >= amount){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+amount && us.size() >= amount){
 			for(int i = 0 ; i < amount ; i++){
 				horseman.add(us.remove(0));
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeHorseman == null){
-				nextArcher();
+				nextHorseman();
 			}
 			return true;
 		}
@@ -242,13 +270,14 @@ public class UnitGroup {
 	}
 	
 	public boolean addLancer(int amount){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+amount){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+amount){
 			for(int i = 0 ; i < amount ; i++){
 				lancer.add(new Lancer());
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeLancer == null){
-				nextArcher();
+				nextLancer();
 			}
 			return true;
 		}
@@ -256,13 +285,14 @@ public class UnitGroup {
 	}
 	
 	public boolean addLancer(ArrayList<Unit> us){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+us.size()){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+us.size()){
 			for(Unit u : us){
 				lancer.add(u);
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeLancer == null){
-				nextArcher();
+				nextLancer();
 			}
 			return true;
 		}
@@ -270,13 +300,14 @@ public class UnitGroup {
 	}
 	
 	public boolean addLancerFrom(ArrayList<Unit> us ,int amount){
-		if(Utility.UNIT_CAP_PLAYER >= unitAmount+amount && us.size() >= amount){
+		if(Settings.UNIT_CAP_PLAYER >= unitAmount+amount && us.size() >= amount){
 			for(int i = 0 ; i < amount ; i++){
 				lancer.add(us.remove(0));
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			if(activeLancer == null){
-				nextArcher();
+				nextLancer();
 			}
 			return true;
 		}
@@ -284,11 +315,14 @@ public class UnitGroup {
 	}
 	
 	public boolean addUnitsFrom(UnitGroup from ,int archerAmount ,int horsemanAmount ,int lancerAmount){
-		if(Utility.UNIT_CAP_FIELD >= unitAmount+archerAmount+horsemanAmount+lancerAmount){
+		if(Settings.UNIT_CAP_FIELD >= unitAmount+archerAmount+horsemanAmount+lancerAmount){
 			addArcherFrom(from.getArcher(), archerAmount);
 			addHorsemanFrom(from.getHorseman(), horsemanAmount);
 			addLancerFrom(from.getLancer(), lancerAmount);
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			
+			refreshUnitAmount();
+			from.refreshUnitAmount();
 			return true;
 		}
 		return false;
@@ -322,7 +356,8 @@ public class UnitGroup {
 			for(int i = 0 ; i < amount ; i++){
 				to.add(from.remove(0));
 			}
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			return true;
 		}
 		return false;
@@ -331,9 +366,21 @@ public class UnitGroup {
 	public UnitGroup subGroup(int archers ,int horsemans ,int lancers){
 		
 		if(archer.size() >= archers && horseman.size() >= horsemans && lancer.size() >= lancers){
-						
-			unitAmount = archer.size()+horseman.size()+lancer.size();
 			
+			subUnits(getArcher(), archers);
+			subUnits(getLancer(), lancers);
+			subUnits(getHorseman(), horsemans);
+			
+			activeArcher = null;
+			activeLancer = null;
+			activeHorseman = null;
+
+			nextArcher();
+			nextLancer();
+			nextHorseman();
+			
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 			return new UnitGroup(owner ,archers, horsemans, lancers);
 		}else{
 			return null;
@@ -342,13 +389,18 @@ public class UnitGroup {
 	
 	public void addGroup(UnitGroup g){
 		
-		if(Utility.UNIT_CAP_PLAYER >= g.getUnitAmount()+unitAmount){
+		if(Settings.UNIT_CAP_PLAYER >= g.getUnitAmount()+unitAmount){
 			addArcher(g.getArcher());
 			addHorseman(g.getHorseman());
 			addLancer(g.getLancer());
 			
-			unitAmount = archer.size()+horseman.size()+lancer.size();
+			//unitAmount = archer.size()+horseman.size()+lancer.size();
+			refreshUnitAmount();
 		}
+	}
+	
+	public void refreshUnitAmount(){
+		unitAmount = archer.size()+horseman.size()+lancer.size();
 	}
 	
 	/**
@@ -464,7 +516,7 @@ public class UnitGroup {
 	}
 	
 	public boolean addItem(Item i){
-		if(Utility.ITEM_CAP_UNITGROUP < items.size()){
+		if(Settings.ITEM_CAP_UNITGROUP < items.size()){
 			items.add(i);
 			return true;
 		}		
@@ -477,5 +529,59 @@ public class UnitGroup {
 			return i;
 		}
 		return null;	
+	}
+
+	/**
+	 * @return the archerDeathCounter
+	 */
+	public int getArcherDeathCounter() {
+		return archerDeathCounter;
+	}
+
+	/**
+	 * @param archerDeathCounter the archerDeathCounter to set
+	 */
+	public void setArcherDeathCounter(int archerDeathCounter) {
+		this.archerDeathCounter = archerDeathCounter;
+	}
+	
+	public void increaseArcherDeathCounter(){
+		this.archerDeathCounter++;
+	}
+	
+	/**
+	 * @return the lancerDeathCounter
+	 */
+	public int getLancerDeathCounter() {
+		return lancerDeathCounter;
+	}
+
+	/**
+	 * @param lancerDeathCounter the lancerDeathCounter to set
+	 */
+	public void setLancerDeathCounter(int lancerDeathCounter) {
+		this.lancerDeathCounter = lancerDeathCounter;
+	}
+
+	public void increaseLancerDeathCounter(){
+		this.lancerDeathCounter++;
+	}
+	
+	/**
+	 * @return the horsemanDeathcounter
+	 */
+	public int getHorsemanDeathcounter() {
+		return horsemanDeathcounter;
+	}
+
+	/**
+	 * @param horsemanDeathcounter the horsemanDeathcounter to set
+	 */
+	public void setHorsemanDeathcounter(int horsemanDeathcounter) {
+		this.horsemanDeathcounter = horsemanDeathcounter;
+	}
+	
+	public void increaseHorsemanDeathcounter(){
+		this.horsemanDeathcounter++;
 	}
 }
